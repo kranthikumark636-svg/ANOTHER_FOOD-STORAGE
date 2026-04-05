@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Food Help Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>🍱 Share Food / Request Help</h2>
+
+<input type="text" id="name" placeholder="Your Name"><br>
+<input type="text" id="phone" placeholder="Phone Number"><br>
+<textarea id="message" placeholder="Food details..."></textarea><br>
+
+<button onclick="getLocation()">📍 Get Location</button>
+<p id="location"></p>
+
+<button onclick="submitData()">Submit</button>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
