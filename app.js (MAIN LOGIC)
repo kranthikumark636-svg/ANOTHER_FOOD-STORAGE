@@ -1,0 +1,70 @@
+// 🔥 Firebase Config (PASTE YOURS)
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// 📍 GET LOCATION
+function getLocation() {
+  navigator.geolocation.getCurrentPosition(position => {
+    let lat = position.coords.latitude;
+    let lon = position.coords.longitude;
+    document.getElementById("location").innerText =
+      `Lat: ${lat}, Lon: ${lon}`;
+    window.userLocation = { lat, lon };
+  });
+}
+
+// 📤 SUBMIT DATA
+function submitData() {
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const message = document.getElementById("message").value;
+
+  db.collection("requests").add({
+    name,
+    phone,
+    message,
+    location: window.userLocation,
+    time: new Date()
+  }).then(() => {
+    alert("Data Submitted!");
+  });
+}
+
+// 📊 LOAD DATA (DASHBOARD)
+function loadData() {
+  const list = document.getElementById("dataList");
+
+  db.collection("requests").onSnapshot(snapshot => {
+    list.innerHTML = "";
+    snapshot.forEach(doc => {
+      const data = doc.data();
+
+      list.innerHTML += `
+        <div style="border:1px solid black; padding:10px; margin:10px;">
+          <p><b>Name:</b> ${data.name}</p>
+          <p><b>Phone:</b> ${data.phone}</p>
+          <p><b>Message:</b> ${data.message}</p>
+
+          <button onclick="callUser('${data.phone}')">📞 Call</button>
+          <button onclick="whatsapp('${data.phone}','${data.message}')">💬 WhatsApp</button>
+        </div>
+      `;
+    });
+  });
+}
+
+// 📞 CALL
+function callUser(phone) {
+  window.location.href = `tel:${phone}`;
+}
+
+// 💬 WHATSAPP FORWARD
+function whatsapp(phone, msg) {
+  window.open(`https://wa.me/${phone}?text=${msg}`);
+}
