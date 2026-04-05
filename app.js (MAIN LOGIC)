@@ -83,3 +83,62 @@ function login() {
     })
     .catch(err => alert(err.message));
 }
+addMarker(data.location.lat, data.location.lon, data.name);
+function getDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI/180;
+  const dLon = (lon2 - lon1) * Math.PI/180;
+
+  const a =
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI/180) *
+    Math.cos(lat2 * Math.PI/180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+if(getDistance(userLat, userLon, data.location.lat, data.location.lon) <= 5){
+  // show only nearby
+}
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+const storage = getStorage();
+async function submitData() {
+  const file = document.getElementById("image").files[0];
+
+  const storageRef = ref(storage, 'images/' + file.name);
+  await uploadBytes(storageRef, file);
+
+  const imageURL = await getDownloadURL(storageRef);
+
+  db.collection("requests").add({
+    name,
+    phone,
+    message,
+    image: imageURL,
+    location: window.userLocation
+  });
+}async function submitData() {
+  const file = document.getElementById("image").files[0];
+
+  const storageRef = ref(storage, 'images/' + file.name);
+  await uploadBytes(storageRef, file);
+
+  const imageURL = await getDownloadURL(storageRef);
+
+  db.collection("requests").add({
+    name,
+    phone,
+    message,
+    image: imageURL,
+    location: window.userLocation
+  });
+}
+function notify(msg) {
+  if (Notification.permission === "granted") {
+    new Notification(msg);
+  } else {
+    Notification.requestPermission();
+  }
+}
+notify("New Food Request Added!");
