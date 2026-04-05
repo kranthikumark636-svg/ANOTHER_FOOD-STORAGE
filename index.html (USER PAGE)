@@ -28,3 +28,7 @@
 <input type="password" id="password" placeholder="Password">
 <button onclick="login()">Login</button>
 <input type="file" id="image">
+<h3>Admin Login</h3>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
+<button onclick="login()">Login</button>
